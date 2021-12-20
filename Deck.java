@@ -26,16 +26,12 @@ public class Deck {
         String printDeck = "";
 
         for (Card card : deck) {
-
-            String firstValueRank = Integer.toString(card.getRank().getValue()[0]);
-            int secondValue = card.getRank().getValue()[1];
-            String secondValueRank =  secondValue == -1 ? "" : " or " + secondValue;
-            printDeck += card.getSuit().toString() + "  " + card.getRank().toString() + "  " + firstValueRank + secondValueRank + "\n";
-
+            printDeck += card.printCard();
         }
-
         return printDeck;
     }
+
+
     
     
 
@@ -48,7 +44,7 @@ public class Deck {
 
     public Card removeCard() {
 
-        int cardIndex = (int)(Math.random() * (deck.size() + 1));
+        int cardIndex = (int)(Math.random() * (deck.size()));
         Card card = deck.get(cardIndex);
         deck.remove(cardIndex);
 

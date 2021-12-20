@@ -2,6 +2,7 @@ import java.util.LinkedList;
 
 public class Player {
     
+    private static final int maxPoints = 21;
     private int totalPoints;
     private LinkedList<Card> hand;
     private String name;
@@ -26,19 +27,51 @@ public class Player {
 
     public void hit(Card card) {
         this.hand.add(card);
+        recalculateTotalPoints();
     }
 
-    public String printHand() {
+    public String handToString() {
         String printHand = "";
         for (Card card : hand) {
-
-            String firstValueRank = Integer.toString(card.getRank().getValue()[0]);
-            int secondValue = card.getRank().getValue()[1];
-            String secondValueRank =  secondValue == -1 ? "" : " or " + secondValue;
-            printHand += card.getSuit().toString() + "  " + card.getRank().toString() + "  " + firstValueRank + secondValueRank + "\n";
-
+            printHand += card.printCard();
         }
-        return this.name + ":\n" + printHand;
+        String dealer = this.dealer ? " (dealer)" : "";
+        String points = this.dealer ? "" : "--------------------\nTotal points: " + Integer.toString(this.totalPoints) + "\n";
+        return this.name + dealer + ":\n" + printHand + points;
+    }
+
+    public String dealerHandToString() {
+        String printDealer = "";
+
+        for (int i = 0; i < hand.size() - 1; ++i) {
+            printDealer += hand.get(i).printCard();
+        }
+        return this.name + " (dealer):\n" + printDealer + "CARD HIDDEN\n";
+    }
+
+    public void recalculateTotalPoints(){
+        System.out.println("here");
+        this.totalPoints = 0;
+        int aceCount = 0;
+
+        for (Card card : hand) {
+            if (card.getRank() != Rank.ACE) {
+                this.totalPoints += card.getRank().getValue();
+            } else {
+                aceCount++;
+            }
+        }
+
+        System.out.println("ACE count " + aceCount);
+
+        if (aceCount > 0) {
+            System.out.println(maxPoints + " " + this.totalPoints + " " + Rank.ACE.getAceValue2() +" " + (aceCount - 1));
+            if (this.totalPoints + Rank.ACE.getAceValue2() + (aceCount - 1) <= maxPoints) {
+                this.totalPoints += Rank.ACE.getAceValue2() + (aceCount - 1); 
+            } else {
+                this.totalPoints += aceCount;
+            }
+        }
     }
 
 

@@ -14,26 +14,25 @@ public enum Rank {
     ACE(1, 11);
 
     public final int value;
-    public final int value2;
+    public final int aceValue2;
 
-    private Rank(int value, int value2) {
+    private Rank(int value, int aceValue2) {
 		this.value = value;
-        this.value2 = value2;
+        this.aceValue2 = aceValue2;
 	}
 
     // Constructor for ace
     private Rank(int value) {
 		this.value = value;
-        this.value2 = -1;           // Value2 does not exist
+        this.aceValue2 = -1;           // aceValue2 does not exist. Card is not ace
 	}
 
-    public int[] getValue() {
-        int[] values = new int[2];
+    public int getValue() {
+        return value;
+    }
 
-        values[0] = value;
-        values[1] = value2;
-
-        return values;
+    public int getAceValue2() {
+        return aceValue2;
     }
 
 }

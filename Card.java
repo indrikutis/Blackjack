@@ -36,4 +36,15 @@ public class Card {
         this.suit = suit;
     }
 
+    public String printCard() {
+        String printCard = "";
+
+        String firstValueRank = Integer.toString(this.rank.getValue());
+        int secondValue = this.rank.getAceValue2();
+        String secondValueRank =  secondValue == -1 ? "" : " or " + secondValue;
+        printCard += this.suit.toString() + "  " + this.rank.toString() + "  " + firstValueRank + secondValueRank + "\n";
+
+        return printCard;
+    }
+
 }
