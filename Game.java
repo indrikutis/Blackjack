@@ -8,7 +8,7 @@ public class Game {
     private Scanner scanner = new Scanner(System.in);
     private Player dealer;
 
-    public Game(Deck deck, LinkedList<Player> players) {
+    public Game(Deck deck, LinkedList<Player> players) throws InterruptedException {
         this.deck = deck;
         this.players = players;
 
@@ -23,9 +23,17 @@ public class Game {
         // TODO: leave the game, add a new player to the game, contive the game while
         // there is at least one player
 
-        placeBets(); // All players except the dealer to place a bet
-        drawInitialCards(); // All players draw cards
-        playRound(); // Play a round
+        Boolean continuePlaying = true;
+
+        // Continue playing the game while the user wants, and while there are still players left
+        while (continuePlaying && players.size() > 0) {
+            placeBets(); // All players except the dealer to place a bet
+            drawInitialCards(); // All players draw cards
+            playRound(); // Play a round
+
+            System.out.println("Do you want to play another round? (y/n)");
+            continuePlaying = scanner.nextLine().toLowerCase().equals("y") ? true : false;
+        }
 
     }
 
@@ -60,27 +68,30 @@ public class Game {
 
     /**
      * Every player gets 2 cards
+     * @throws InterruptedException
      */
-    private void drawInitialCards() {
+    private void drawInitialCards() throws InterruptedException {
         // First card
         System.out.println("\n******************************* DRAW THE FIRST CARD *******************************\n");
         for (Player player : players) {
-
             playerHit(player);
-
+            consoleWait();
         }
 
         playerHit(dealer); // Dealer draws the card last
+        consoleWait();
 
         // Second card
         System.out.println("\n******************************* DRAW THE SECOND CARD ******************************\n");
 
         for (Player player : players) {
             playerHit(player);
+            consoleWait();
         }
 
         dealer.hit(addCard());
         System.out.println(dealer.dealerHandToString()); // Dealer keeps the second card hidden
+        consoleWait();
     }
 
     private void playRound() {
@@ -237,4 +248,7 @@ public class Game {
         return this.deck.removeCard();
     }
 
+    public void consoleWait() throws InterruptedException {
+        Thread.sleep(1500);
+    }
 }
