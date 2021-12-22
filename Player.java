@@ -2,8 +2,8 @@ import java.util.LinkedList;
 
 public class Player {
     
-    private static final int maxPoints = 21;
-    private static final int minDealerPoints = 17;
+    public static final int maxPoints = 21;
+    public static final int minDealerPoints = 17;
     private int totalPoints;
     private LinkedList<Card> hand;
     private String name;
@@ -43,13 +43,15 @@ public class Player {
 
     public String handToString() {
         String printHand = "";
+
         for (Card card : hand) {
             printHand += card.printCard();
         }
-        String dealer = this.dealer ? " (dealer)" : "";
-        String points = this.dealer ? "" : "--------------------\nTotal points: " + Integer.toString(this.totalPoints) + "\n";
-        return this.name + dealer + ":\n" + printHand + points;
+        String dealer = (this.dealer ? " (dealer)" : "");
+        String points = "--------------------\nTotal points: " + Integer.toString(this.totalPoints) + "\n";
+        return "####################\n" + this.name + dealer + ":\n####################\nHand:\n" + printHand + points + "--------------------\n" + (dealer.equals("") ? chipsInfoToString()+ "\n" : "");
     }
+
 
     public String dealerHandToString() {
         String printDealer = "";
@@ -57,7 +59,15 @@ public class Player {
         for (int i = 0; i < hand.size() - 1; ++i) {
             printDealer += hand.get(i).printCard();
         }
-        return this.name + " (dealer):\n" + printDealer + "CARD HIDDEN\n";
+        return "####################\n" + this.name + " (dealer):\n####################\nHand:\n" + printDealer + "THE SECOND CARD IS CARD HIDDEN\n--------------------\n";
+    }
+
+    /**
+     * 
+     * @return the current betting, chips count information
+     */
+    public String chipsInfoToString() {
+        return "The current bet: " + this.currentBet + "\nTotal number of chips (including the current bet): " + this.chips;
     }
 
     /**
@@ -77,22 +87,13 @@ public class Player {
             }
         }
 
-        System.out.println("ACE count " + aceCount);
-
         if (aceCount > 0) {
-            System.out.println(maxPoints + " " + this.totalPoints + " " + Rank.ACE.getAceValue2() +" " + (aceCount - 1));
-
             // Maximizes the ACE value if it doesn't bust a player.
             if (this.totalPoints + Rank.ACE.getAceValue2() + (aceCount - 1) <= maxPoints) {
                 this.totalPoints += Rank.ACE.getAceValue2() + (aceCount - 1); 
             } else {
                 this.totalPoints += aceCount;
             }
-        }
-
-        // Check if bust
-        if( totalPoints > maxPoints) {
-            this.bust = true;
         }
     }
 
@@ -219,7 +220,15 @@ public class Player {
      */
     public void setCurrentBet(int currentBet) {
         this.currentBet = currentBet;
-        this.chips -= this.currentBet;                  // Reduce the total of chips by the current bet
+        //this.chips -= this.currentBet;                  // Reduce the total of chips by the current bet
+    }
+
+    /**
+     * Updates teh current chip value
+     * @param chips to add/deduct
+     */
+    public void updateChips(int chips) {
+        this.chips += chips;
     }
 
 }
