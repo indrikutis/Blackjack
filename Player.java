@@ -12,8 +12,9 @@ public class Player {
     private int chips;
     private int currentBet;
     private Boolean bust;
+    private int id;
 
-    public Player(String name) {
+    public Player(String name, int id) {
         this.hand = new LinkedList<Card>();
         this.name = name;
         this.totalPoints = 0;
@@ -22,6 +23,7 @@ public class Player {
         this.chips = 5;
         this.bust = false;
         this.currentBet = 0;
+        this.id = id;
     }
 
     // Constructor for a dealer
@@ -229,6 +231,21 @@ public class Player {
      */
     public void updateChips(int chips) {
         this.chips += chips;
+    }
+
+
+    /**
+     * @return int return the id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
 }
