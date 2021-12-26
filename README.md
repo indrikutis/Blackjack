@@ -1,14 +1,16 @@
 # Blackjack
 
-## Goal
+# Goal
 The purpose of a game is to have a hand that totals higher than the dealer's, but doesn't total higher than 21.
+
+# Game
 
 ## Terminology
 1. Hit - action, when you wish a dealer to give you another card
 2. Stand - action to stop drawing cards
 3. Bust - when the total points of a hand exceed 21
 
-# Game setup
+## Game setup
 
 The game contains a number of players and a dealer.
 
@@ -35,8 +37,7 @@ The game contains a number of players and a dealer.
 2. Points are calculated automatically. If it is possible, the value of ACE is 11, overwise, it's 1.
 3. The player is removed from the game once they don't have enough chips to bet anything.
 
-
-Not all the rules are implemented in this version of blackjack.
+Not all the rules and possible versions are implemented in this game of blackjack.
 
 # Getting started
 
@@ -49,9 +50,9 @@ By following these simple steps, a game can be build and run on your local machi
 Instructions for windows/linux OS:
 
 1. Clone the project with the command: git clone https://github.com/indrikutis/Blackjack.git
-2. Compile the files: jabac *.java
+2. Compile the files: javac *.java
 3. Run the game: java Driver
 4. Follow directions on the screen
 
-# Hope you enjoy playing!
+# Hope you enjoy the game!
 

@@ -1,11 +1,12 @@
 import java.util.LinkedList;
 
 public class Player {
-    
+
     public static final int maxPoints = 21;
     public static final int minDealerPoints = 17;
+
     private int totalPoints;
-    private LinkedList<Card> hand;
+    private LinkedList<Card> hand; // List for player's cards
     private String name;
     private Boolean stand;
     private Boolean dealer;
@@ -14,13 +15,19 @@ public class Player {
     private Boolean bust;
     private int id;
 
+    /**
+     * Constructor for a player
+     * 
+     * @param name   of the player
+     * @param unique identifier
+     */
     public Player(String name, int id) {
         this.hand = new LinkedList<Card>();
         this.name = name;
         this.totalPoints = 0;
         this.stand = false;
         this.dealer = false;
-        this.chips = 5;
+        this.chips = 5; // Player by default starts with 5 chips
         this.bust = false;
         this.currentBet = 0;
         this.id = id;
@@ -33,54 +40,78 @@ public class Player {
         this.totalPoints = 0;
         this.stand = false;
         this.dealer = true;
-        this.chips = 10000;
+        this.chips = 10000; // Dealer by default starts with 5 chips
         this.bust = false;
         this.currentBet = 0;
     }
 
+    /**
+     * Player draws a card
+     * 
+     * @param card to be added to the hand
+     */
     public void hit(Card card) {
-        this.hand.add(card);
-        recalculateTotalPoints();
-    }
-
-    public String handToString() {
-        String printHand = "";
-
-        for (Card card : hand) {
-            printHand += card.printCard();
-        }
-        String dealer = (this.dealer ? " (dealer)" : "");
-        String points = "--------------------\nTotal points: " + Integer.toString(this.totalPoints) + "\n";
-        return "####################\n" + this.name + dealer + ":\n####################\nHand:\n" + printHand + points + "--------------------\n" + (dealer.equals("") ? chipsInfoToString()+ "\n" : "");
-    }
-
-
-    public String dealerHandToString() {
-        String printDealer = "";
-
-        for (int i = 0; i < hand.size() - 1; ++i) {
-            printDealer += hand.get(i).printCard();
-        }
-        return "####################\n" + this.name + " (dealer):\n####################\nHand:\n" + printDealer + "THE SECOND CARD IS CARD HIDDEN\n--------------------\n";
+        this.hand.add(card); // A card is added to te hand
+        recalculateTotalPoints(); // Recalculates total points of the player
     }
 
     /**
+     * Function to display player's information
      * 
+     * @return string of player's hand and points information
+     */
+    public String handToString() {
+        String printHand = "";
+
+        // Add all cards to the string
+        for (Card card : hand) {
+            printHand += card.cardToString();
+        }
+
+        // Indicate if the player is a dealer
+        String dealer = (this.dealer ? " (dealer)" : "");
+
+        // Add points information
+        String points = "--------------------\nTotal points: " + Integer.toString(this.totalPoints) + "\n";
+
+        return "####################\n" + this.name + dealer + ":\n####################\nHand:\n" + printHand + points
+                + "--------------------\n" + (dealer.equals("") ? chipsInfoToString() + "\n" : "");
+    }
+
+    /**
+     * Function to display dealer's information
+     * @return string of dealers's hand and points information
+     */
+    public String dealerHandToString() {
+        String printDealer = "";
+
+        // Add all cards to the string
+        for (int i = 0; i < hand.size() - 1; ++i) {
+            printDealer += hand.get(i).cardToString();
+        }
+        return "####################\n" + this.name + " (dealer):\n####################\nHand:\n" + printDealer
+                + "THE SECOND CARD IS CARD HIDDEN\n--------------------\n";
+    }
+
+    /**
+     * Get the message of a current bet and total chips information
      * @return the current betting, chips count information
      */
     public String chipsInfoToString() {
-        return "The current bet: " + this.currentBet + "\nTotal number of chips (including the current bet): " + this.chips;
+        return "The current bet: " + this.currentBet + "\nTotal number of chips (including the current bet): "
+                + this.chips;
     }
 
     /**
      * Recalculates total points of a hand, correctly choosing the ACE value
-     * Ace value is maximized if it's possible without a bust.
+     * Ace value is maximized if it's possible without a bust
      */
-    public void recalculateTotalPoints(){
+    public void recalculateTotalPoints() {
 
         this.totalPoints = 0;
         int aceCount = 0;
 
+        // Calculates points of cards without ACE(s) and counts ACEs
         for (Card card : hand) {
             if (card.getRank() != Rank.ACE) {
                 this.totalPoints += card.getRank().getValue();
@@ -92,19 +123,19 @@ public class Player {
         if (aceCount > 0) {
             // Maximizes the ACE value if it doesn't bust a player.
             if (this.totalPoints + Rank.ACE.getAceValue2() + (aceCount - 1) <= maxPoints) {
-                this.totalPoints += Rank.ACE.getAceValue2() + (aceCount - 1); 
+                this.totalPoints += Rank.ACE.getAceValue2() + (aceCount - 1);
             } else {
                 this.totalPoints += aceCount;
             }
         }
     }
 
+    /**
+     * 
+     * @return message of a current bet
+     */
     public String currentBetToString() {
         return "The current bet is: " + this.currentBet;
-    }
-
-    public int getMinDealerPoints() {
-        return minDealerPoints;
     }
 
     /**
@@ -149,7 +180,6 @@ public class Player {
         this.name = name;
     }
 
-
     /**
      * @return Boolean return the stand
      */
@@ -163,7 +193,6 @@ public class Player {
     public void setStand(Boolean stand) {
         this.stand = stand;
     }
-
 
     /**
      * @return Boolean return the dealer
@@ -179,7 +208,6 @@ public class Player {
         this.dealer = dealer;
     }
 
-
     /**
      * @return int return the chips
      */
@@ -193,7 +221,6 @@ public class Player {
     public void setChips(int chips) {
         this.chips = chips;
     }
-
 
     /**
      * @return Boolean return the bust
@@ -209,7 +236,6 @@ public class Player {
         this.bust = bust;
     }
 
-
     /**
      * @return int return the currentBet
      */
@@ -222,17 +248,16 @@ public class Player {
      */
     public void setCurrentBet(int currentBet) {
         this.currentBet = currentBet;
-        //this.chips -= this.currentBet;                  // Reduce the total of chips by the current bet
     }
 
     /**
      * Updates teh current chip value
+     * 
      * @param chips to add/deduct
      */
     public void updateChips(int chips) {
         this.chips += chips;
     }
-
 
     /**
      * @return int return the id

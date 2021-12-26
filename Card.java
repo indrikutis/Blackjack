@@ -3,6 +3,11 @@ public class Card {
     private Rank rank;
     private Suit suit;
 
+    /**
+     * Constructor for a card
+     * @param suit of a card
+     * @param rank of a card
+     */
     public Card(Suit suit, Rank rank) {
         this.rank = rank;
         this.suit = suit;
@@ -36,15 +41,19 @@ public class Card {
         this.suit = suit;
     }
 
-    public String printCard() {
-        String printCard = "";
+    /**
+     * Function to display a card
+     * @return string of a card
+     */
+    public String cardToString() {
+        String cardString = "";
 
         String firstValueRank = Integer.toString(this.rank.getValue());
         int secondValue = this.rank.getAceValue2();
         String secondValueRank =  secondValue == -1 ? "" : " or " + secondValue;
-        printCard += this.suit.toString() + "  " + this.rank.toString() + "  " + firstValueRank + secondValueRank + "\n";
+        cardString += this.suit.toString() + "  " + this.rank.toString() + "  " + firstValueRank + secondValueRank + "\n";
 
-        return printCard;
+        return cardString;
     }
 
 }

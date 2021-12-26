@@ -1,15 +1,14 @@
 import java.util.LinkedList;
 
-// Card values: 
-// 2-10 -> face value (36 cards)
-// Face cards (Jack, Queen, King) -> 10 (12 cards)
-// Ace -> 1 or 11 (4 cards)
+// Class generating a deck
 
 public class Deck {
 
-    private static final int nrOfCards = 52;
     private LinkedList<Card> deck;
 
+    /**
+     * Generates a deck
+     */
     public Deck() {
         this.deck = new LinkedList<Card>();;
 
@@ -21,19 +20,19 @@ public class Deck {
         }
     }
 
-    public String printToString() {
+    /**
+     * Function to display all cards in the deck
+     * @return deck as a string
+     */
+    public String deckToString() {
 
-        String printDeck = "";
+        String deckToString = "";
 
         for (Card card : deck) {
-            printDeck += card.printCard();
+            deckToString += card.cardToString();
         }
-        return printDeck;
+        return deckToString;
     }
-
-
-    
-    
 
     /**
      * @return LinkedList<Card> return the deck
@@ -42,6 +41,10 @@ public class Deck {
         return deck;
     }
 
+    /**
+     * Removes a random card from the deck
+     * @return the removed card
+     */
     public Card removeCard() {
 
         int cardIndex = (int)(Math.random() * (deck.size()));
