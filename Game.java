@@ -2,25 +2,26 @@ import java.util.LinkedList;
 
 public class Game {
 
-    private Deck deck;                                  // The game deck
-    private LinkedList<Player> players;                 // The list of players
-    private Player dealer;                              // The game dealer
-    private int playerID;                               // ID counter to generate unique IDs for new players
+    private Deck deck; // The game deck
+    private LinkedList<Player> players; // The list of players
+    private Player dealer; // The game dealer
+    private int playerID; // ID counter to generate unique IDs for new players
 
     /**
      * Initializes a new game
      * The game can contain multiple rounds while players want to play
      * and there is at least one player with enough chips
+     * 
      * @throws InterruptedException
      */
     public Game() throws InterruptedException {
 
-        this.deck = new Deck();                         // Create a new deck
-        
+        this.deck = new Deck(); // Create a new deck
+
         this.players = new LinkedList<Player>();
-        this.playerID = 1;                              // Initialize the ID count
-        addADealer();                                   // Add a dealer to the game
-        addPlayers();                                   // Add players to the game
+        this.playerID = 1; // Initialize the ID count
+        addADealer(); // Add a dealer to the game
+        addPlayers(); // Add players to the game
 
         // if no players have been added, end the game instantly
         if (players.size() < 1) {
@@ -29,11 +30,12 @@ public class Game {
 
         Boolean continuePlaying = true;
 
-        // Continue playing the game while players want to play and there is at least one player with enough chips
+        // Continue playing the game while players want to play and there is at least
+        // one player with enough chips
         do {
-            placeBets();                                // All players place a bet
-            drawInitialCards();                         // All players and a dealer draw cards
-            playRound();                                // Play a round
+            placeBets(); // All players place a bet
+            drawInitialCards(); // All players and a dealer draw cards
+            playRound(); // Play a round
 
             // Asks the user if they want to play another round
             System.out.println("Do you want to play another round? (y/n)");
@@ -77,7 +79,7 @@ public class Game {
                 }
 
                 // Resets values for the next game
-                this.deck = new Deck();                                 // Generates a new deck
+                this.deck = new Deck(); // Generates a new deck
                 for (Player player : players) {
 
                     player.setBust(false);
@@ -86,7 +88,7 @@ public class Game {
                     dealer.setHand(new LinkedList<Card>());
                 }
             } else {
-                endTheGame();                                           // Ends the game
+                endTheGame(); // Ends the game
             }
 
             // Checks if the player has enough chips to continue the playing the game
@@ -100,7 +102,7 @@ public class Game {
             }
             players.removeAll(playersToRemove);
 
-        } while (continuePlaying && players.size() > 0);                // Continue the loop while there is enough players for the game
+        } while (continuePlaying && players.size() > 0); // Continue the loop while there is enough players for the game
         endTheGame();
     }
 
@@ -126,9 +128,9 @@ public class Game {
         // Add a new player until the stop is entered
         while (!input.equals("stop")) {
             this.players.add(new Player(input, playerID));
-            System.out.println("Player ID: " + playerID);               // Print the player ID to the screen
-            this.playerID++;                                            // Create unique IDs
-            System.out.println(message);                                // Ask if another player wants to join the game
+            System.out.println("Player ID: " + playerID); // Print the player ID to the screen
+            this.playerID++; // Create unique IDs
+            System.out.println(message); // Ask if another player wants to join the game
             input = System.console().readLine();
         }
     }
@@ -154,32 +156,41 @@ public class Game {
 
             // Players with chips place a bet
             if (player.getChips() > 0) {
-                System.out.println(player.getName() + ", please place a bet:");
+                Boolean askInput = true;
 
-                String input = System.console().readLine();
-                while (!checkIfDigit(input)) {
-                    System.out.println(player.getName() + ", please place a valid bet (integer format):");
-                    input = System.console().readLine();
-                }
-                int bet = Integer.parseInt(input);
+                String input = "";
+                int bet;
+
+                System.out.println(player.getName() + ", please place a bet:");
+                input = System.console().readLine();
 
                 // Ask a user to enter a valid bet
-                while (player.getChips() < bet) {
-                    System.out.println("Place a lower bet. You currently have " + player.getChips() + " chips. "
-                            + player.getName() + ", please place a bet:");
+                while (askInput) {
 
-                    input = System.console().readLine();
-                    while (!checkIfDigit(input)) {
+                    if (checkIfDigit(input)) {
+                        bet = Integer.parseInt(input);
+                        if (bet >= 0) {
+                            if (player.getChips() >= bet) {
+                                askInput = false;
+                            } else {
+                                System.out.println(
+                                        "Place a lower bet. You currently have " + player.getChips() + " chips. "
+                                                + player.getName() + ", please place a bet:");
+
+                                input = System.console().readLine();
+                            }
+                        } else {
+                            System.out
+                                    .println(player.getName() + ", please place a valid bet (greater or equal to 0):");
+                            input = System.console().readLine();
+                        }
+                    } else {
                         System.out.println(player.getName() + ", please place a valid bet (integer format):");
                         input = System.console().readLine();
                     }
-
-                    bet = Integer.parseInt(input);
-
                 }
-                System.out.println();
-                player.setCurrentBet(bet);
-            } else {                                                    // If the player doesn't have any chips to play, the are removed from the game
+
+            } else { // If the player doesn't have any chips to play, the are removed from the game
                 System.out.println(
                         player.getName() + " doesn't have enough chips to play. The player is removed from the game.");
                 players.remove(player);
@@ -214,10 +225,10 @@ public class Game {
         System.out.println("\n******************************* DRAW THE FIRST CARD *******************************\n");
         for (Player player : players) {
             playerHit(player);
-            consoleWait();              
+            consoleWait();
         }
 
-        playerHit(dealer);                                      // Dealer draws the card last
+        playerHit(dealer); // Dealer draws the card last
         consoleWait();
 
         // Second card
@@ -229,14 +240,15 @@ public class Game {
         }
 
         dealer.hit(addCard());
-        System.out.println(dealer.dealerHandToString());        // Dealer keeps the second card hidden
+        System.out.println(dealer.dealerHandToString()); // Dealer keeps the second card hidden
         consoleWait();
 
         // Check if any players got 21 points
         for (Player player : players) {
             if (player.getTotalPoints() == Player.maxPoints) {
 
-                // Win 1.5 times the current bet from the dealer. Chips are rounded to the player's advantage
+                // Win 1.5 times the current bet from the dealer. Chips are rounded to the
+                // player's advantage
                 int wonChips = (int) Math.round(player.getCurrentBet() + player.getCurrentBet() * 1.5);
                 player.updateChips(wonChips);
 
@@ -259,8 +271,8 @@ public class Game {
         System.out.println("\n*********************************** PLAY A ROUND **********************************\n");
 
         for (Player player : players) {
-            if (!player.isBust()) {                         // Check if the player is still in the round
-                askInput(player);                           // Allow every player to perform action
+            if (!player.isBust()) { // Check if the player is still in the round
+                askInput(player); // Allow every player to perform action
             }
         }
 
@@ -282,7 +294,7 @@ public class Game {
             System.out.println("Dealers hand:\n\n" + dealer.handToString());
 
             // If dealer has less than 16 points, they draw a card
-            while (dealer.getTotalPoints() < Player.minDealerPoints) { 
+            while (dealer.getTotalPoints() < Player.minDealerPoints) {
                 System.out.println("The dealer " + dealer.getName() + " draws an additional card.");
                 playerHit(dealer);
             }
@@ -292,14 +304,14 @@ public class Game {
                     "\n********************************* CALCULATE RESULTS ********************************\n");
 
             // Check if the dealer is busted
-            if (dealer.getTotalPoints() > Player.maxPoints) {                      
+            if (dealer.getTotalPoints() > Player.maxPoints) {
                 System.out.println("The dealer is busted. All players in the round get double their bet.");
 
                 // Every player that's still in the round wins double their bet
                 for (Player player : players) {
                     if (!player.isBust()) {
                         int wonChips = player.getCurrentBet() * 2;
-                        player.updateChips(wonChips); 
+                        player.updateChips(wonChips);
                         System.out.println(player.getName() + " won " + wonChips + " chips. The current chip total is: "
                                 + player.getChips());
                     }
@@ -314,16 +326,17 @@ public class Game {
                     if (!player.isBust()) {
 
                         // Players with a hand higher than dealer's win twice their bet
-                        if (player.getTotalPoints() > dealer.getTotalPoints()) { 
+                        if (player.getTotalPoints() > dealer.getTotalPoints()) {
 
                             anyoneWon = true;
                             int wonChips = player.getCurrentBet() * 2;
-                            player.updateChips(player.getCurrentBet() * 2); 
+                            player.updateChips(player.getCurrentBet() * 2);
                             System.out.println(
                                     player.getName() + " won " + wonChips + " chips. The current chip total is: "
                                             + player.getChips());
                         } else {
-                            // The bet was lower then the dealer's bet. The player looses the bet to the dealer.
+                            // The bet was lower then the dealer's bet. The player looses the bet to the
+                            // dealer.
                             player.updateChips(-player.getCurrentBet());
                             dealer.updateChips(player.getCurrentBet());
                         }
@@ -380,7 +393,7 @@ public class Game {
                     return;
                 }
             } else if (action.toLowerCase().equals("stand")) {
-                System.out.println(); 
+                System.out.println();
                 return;
             } else if (action.toLowerCase().equals("hand")) {
                 System.out.println("\n" + player.handToString());
@@ -409,8 +422,8 @@ public class Game {
     public Boolean checkIfPlayerBust(Player player) {
         if (player.getTotalPoints() > Player.maxPoints) {
             player.setBust(true);
-            player.updateChips(-player.getCurrentBet());                // Deduct the current bet from the total of player's chips
-            dealer.updateChips(player.getCurrentBet());                 // Dealer gets the current player's bet
+            player.updateChips(-player.getCurrentBet()); // Deduct the current bet from the total of player's chips
+            dealer.updateChips(player.getCurrentBet()); // Dealer gets the current player's bet
             System.out.println(player.getName() + " is busted. They lost their bet to the dealer.\n");
             return true;
         }
@@ -428,6 +441,7 @@ public class Game {
 
     /**
      * Console pause to simulate a real game
+     * 
      * @throws InterruptedException
      */
     public void consoleWait() throws InterruptedException {
