@@ -171,6 +171,7 @@ public class Game {
                         bet = Integer.parseInt(input);
                         if (bet >= 0) {
                             if (player.getChips() >= bet) {
+                                player.setCurrentBet(bet);
                                 askInput = false;
                             } else {
                                 System.out.println(
